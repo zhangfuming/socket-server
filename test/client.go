@@ -7,6 +7,10 @@ import (
 	"time"
 )
 
+/**
+  *测试
+ */
+
 func sender(conn net.Conn) {
 	for i := 0; i < 1000; i++ {
 		words := "{\"Id\":1,\"Name\":\"golang\",\"Message\":\"message\"}"
@@ -66,3 +70,4 @@ func main() {
 		time.Sleep(1 * 1e9)
 	}
 }
+
