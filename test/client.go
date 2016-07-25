@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net"
 	"os"
-	"time"
+	//"time"
 )
 
 /**
@@ -12,11 +12,8 @@ import (
  */
 
 func sender(conn net.Conn) {
-	for i := 0; i < 1000; i++ {
-		words := "{\"Id\":1,\"Name\":\"golang\",\"Message\":\"message\"}"
-		conn.Write(protocol.Packet([]byte(words)))
-	}
-	fmt.Println("send over")
+	words := "{\"Id\":1,\"Name\":\"golang\",\"Message\":\"message\"}"
+	conn.Write(protocol.Packet([]byte(words)))
 }
 
 func receive(conn net.Conn){
@@ -66,8 +63,10 @@ func main() {
 	fmt.Println("connect success")
 	go sender(conn)
 	go receive(conn)
-	for {
-		time.Sleep(1 * 1e9)
-	}
+
+	select{}
+	//for {
+	//	time.Sleep(1 * 1e9)
+	//}
 }
 
