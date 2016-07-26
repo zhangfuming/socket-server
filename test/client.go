@@ -1,6 +1,6 @@
 package main
 import (
-	"../src/protocol"
+	"server/protocol"
 	"fmt"
 	"net"
 	"os"
