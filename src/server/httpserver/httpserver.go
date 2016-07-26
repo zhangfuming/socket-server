@@ -1,32 +1,32 @@
 package httpserver
 
-import(
-	"net/http"
-	"log"
+import (
 	"encoding/json"
 	"fmt"
-	"../socketserver"
+	"log"
+	"net/http"
+	"server/socketserver"
 )
 
-type Result struct{
-	Ret int
+type Result struct {
+	Ret    int
 	Reason string
-	Data interface{}
+	Data   interface{}
 }
 
 type ajaxController struct {
 }
 
-func StartHttpServer(addr string,flag chan bool){
-	http.HandleFunc("/push/message",pushMsg)
+func StartHttpServer(addr string, flag chan bool) {
+	http.HandleFunc("/push/message", pushMsg)
 	Log("start http server success on ", addr)
-	if err := http.ListenAndServe(addr,nil); err != nil{
+	if err := http.ListenAndServe(addr, nil); err != nil {
 		log.Fatal("Faile to start http server on ", addr, err)
 		flag <- true
 	}
 }
 
-func pushMsg(w http.ResponseWriter, r *http.Request){
+func pushMsg(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("content-type", "application/json")
 	err := r.ParseForm()
 	if err != nil {
@@ -34,12 +34,12 @@ func pushMsg(w http.ResponseWriter, r *http.Request){
 		return
 	}
 	message := r.FormValue("message")
-	if message == ""{
+	if message == "" {
 		outputJson(w, 0, "参数错误", nil)
 		return
 	}
 	socketserver.Broadcast([]byte(message))
-	outputJson(w,1,"操作成功",message)
+	outputJson(w, 1, "操作成功", message)
 }
 
 func outputJson(w http.ResponseWriter, ret int, reason string, i interface{}) {

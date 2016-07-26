@@ -1,24 +1,23 @@
 package socketserver
 
 import (
-	"os"
 	"fmt"
+	"github.com/sluu99/uuid"
 	"net"
-	"../github.com/sluu99/uuid"
-	"../protocol"
+	"os"
+	"server/protocol"
 )
-
 
 var sessions map[string]net.Conn = make(map[string]net.Conn)
 
-func StartSocket(servernetwork string,serveraddress string, flag chan bool){
+func StartSocket(servernetwork string, serveraddress string, flag chan bool) {
 	netListen, err := net.Listen(servernetwork, serveraddress)
 	CheckError(err)
-	defer func(){
+	defer func() {
 		netListen.Close()
 		flag <- true
 	}()
-	Log("socket server start success on ", serveraddress,servernetwork)
+	Log("socket server start success on ", serveraddress, servernetwork)
 	for {
 		conn, err := netListen.Accept()
 		if err != nil {
@@ -28,26 +27,26 @@ func StartSocket(servernetwork string,serveraddress string, flag chan bool){
 		addSession(conn)
 		Log(conn.RemoteAddr().String(), " tcp connect success")
 		go handleConnection(conn)
-		go senderToClient(conn,[]byte("welcome"))
+		go senderToClient(conn, []byte("welcome"))
 	}
 }
 
-func addSession(conn net.Conn){
+func addSession(conn net.Conn) {
 	id := uuid.Rand()
 	sessions[id.Hex()] = conn
 }
 
-func removeSession(conn net.Conn){
-	for key ,val := range sessions{
-		if val == conn{
-			delete(sessions,key)
+func removeSession(conn net.Conn) {
+	for key, val := range sessions {
+		if val == conn {
+			delete(sessions, key)
 		}
 	}
 }
 
-func Broadcast(msg []byte){
-	for _,val := range sessions{
-		senderToClient(val,msg)
+func Broadcast(msg []byte) {
+	for _, val := range sessions {
+		senderToClient(val, msg)
 	}
 }
 
@@ -90,4 +89,3 @@ func CheckError(err error) {
 		os.Exit(1)
 	}
 }
-

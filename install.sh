@@ -12,7 +12,7 @@ export GOBIN="$CURDIR"/bin
 echo "current gopath is "  $GOPATH
 gofmt -w src
 
-go install src/server.go
+go install server
 
 export GOPATH="$OLDGOPATH"
 
